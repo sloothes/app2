@@ -196,7 +196,7 @@ var APP = {
 
 			for (var i in arguments){
 
-				var script = new Function("scope", arguments[ i ]); 
+				var script = new Function( arguments[ i ] ); 
 				script.bind( window ).call(); // bind and execute script.
 				debugMode && console.log("Library", script.toString(), "executed.");
 
