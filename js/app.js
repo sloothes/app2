@@ -34,25 +34,25 @@ var APP = {
 
 		//	Load external javascirpt libraries.
 
-			if ( json.javascripts && json.javascripts.length > 0 ) {
+			if ( json.jslibraries && json.jslibraries.length > 0 ) {
 
-				var javascripts = json.javascripts.map( parseScript );
-				debugMode && console.log( "javascripts:", javascripts );
-
-				while ( javascripts.length ) {
-
-					var object = javascripts.shift(); // important!
-					var script = new Function( "scope", object.source );
-					script.bind( window ).call(); // bind and execute.
-					console.log("Library", object.name, "loaded.");
-
-				}
+				var scripts = json.jslibraries.map( parseScript );
+				debugMode && console.log( "scripts:", scripts );
 
 				function parseScript( item ){ 
 					return {
 						name: item.name,
 						source: JSON.parse( item.source ) // important!
 					};
+				}
+
+				while ( scripts.length ) {
+
+					var object = scripts.shift(); // important!
+					var script = new Function( object.source );
+					script.bind( window ).call(); // bind and execute.
+					console.log("Library", object.name, "loaded.");
+
 				}
 
 			}
