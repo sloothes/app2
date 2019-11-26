@@ -1,6 +1,6 @@
 var debugMode;
-//var camera, scene, renderer;
-//var vr, controls, effect, center;
+var camera, scene, renderer;
+var vr, controls, effect, center;
 
 var APP = {
 
@@ -10,8 +10,8 @@ var APP = {
 
 		var loader = new THREE.ObjectLoader();
 
-		var vr, controls, effect;
-		var camera, scene, renderer;
+	//	var vr, controls, effect;
+	//	var camera, scene, renderer;
 
 		var events = {};
 
@@ -120,7 +120,7 @@ var APP = {
 
 					var script = scripts[ i ];
 
-					var functions = ( new Function( scriptWrapParams, script.source + "\nreturn " + scriptWrapResult + ";" ).bind( object ) )( this, renderer, scene, camera, controls );
+					var functions = ( new Function( scriptWrapParams, script.source + "\nreturn " + scriptWrapResult + ";" ).bind( scene ) )( this, renderer, scene, camera, controls );
 
 					for ( var name in functions ) {
 
