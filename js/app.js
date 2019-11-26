@@ -1,6 +1,6 @@
 var debugMode;
-var camera, scene, renderer;
-var vr, controls, effect, center;
+//var camera, scene, renderer;
+//var vr, controls, effect, center;
 
 var APP = {
 
@@ -10,8 +10,8 @@ var APP = {
 
 		var loader = new THREE.ObjectLoader();
 
-	//	var camera, scene, renderer;
-	//	var vr, controls, effect, center;
+		var vr, controls, effect;
+		var camera, scene, renderer;
 
 		var events = {};
 
