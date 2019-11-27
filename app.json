@@ -290,21 +290,22 @@
 					"type": "Object3D",
 					"name": "Side Panel",
 					"visible": false,
-					"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
-				},
-				{
-					"uuid": "80AD02E1-4910-46C4-8F89-F16C96834F2B",
-					"type": "Object3D",
-					"name": "Materials Tab",
-					"visible": false,
-					"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
-				},
-				{
-					"uuid": "2892ACEF-F0C5-4ED6-85FE-76F285B4E28C",
-					"type": "Object3D",
-					"name": "Textures Tab",
-					"visible": false,
-					"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
+					"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
+					"children": [
+						{
+							"uuid": "80AD02E1-4910-46C4-8F89-F16C96834F2B",
+							"type": "Object3D",
+							"name": "Materials Tab",
+							"visible": false,
+							"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
+						},
+						{
+							"uuid": "2892ACEF-F0C5-4ED6-85FE-76F285B4E28C",
+							"type": "Object3D",
+							"name": "Textures Tab",
+							"visible": false,
+							"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
+						}]
 				}]
 		}
 	}
