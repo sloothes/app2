@@ -31,7 +31,7 @@ var APP = {
 			THREE.Cache.enabled = json.project.cache; // important!
 			console.log({ "vr": vr, "debugMode": debugMode, "cache": THREE.Cache.enabled });
 
-
+	/*
 		//	Load external javascirpt libraries.
 
 			if ( json.jslibraries && json.jslibraries.length > 0 ) {
@@ -56,6 +56,7 @@ var APP = {
 				}
 
 			}
+	*/
 
 		//	Renderer.
 
