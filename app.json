@@ -153,7 +153,7 @@
 			"near": 0.1,
 			"far": 10000,
 			"focus": 10,
-			"aspect": 1.848623853211009,
+			"aspect": 1.9586877278250303,
 			"filmGauge": 35,
 			"filmOffset": 0
 		}
@@ -241,7 +241,8 @@
 				{
 					"uuid": "0FF8D94B-FDAD-4BF2-AB9D-6C6CCCE44222",
 					"type": "Object3D",
-					"name": "Object3D 2",
+					"name": "Camera Controls",
+					"visible": false,
 					"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
 				},
 				{
