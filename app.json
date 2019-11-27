@@ -120,6 +120,21 @@
 			{
 				"name": "update-animations.js",
 				"source": "scene.remove( this );\n\nvar clock = new THREE.Clock();\n\nfunction update() {\n\n\tvar dt = clock.getDelta();\n\n\tTHREE.AnimationHandler.update( dt );\n\n}\n"
+			}],
+		"F864BC9B-8085-4C9D-AAD2-1E14C01D5CAC": [
+			{
+				"name": "localPlayer.js",
+				"source": "scene.remove( this );\n\nvar radius = 3;\nlocalPlayer = new LocalPlayer( radius );\nlocalPlayer.holder.visible = false;\ndebugMode && console.log({\"localPlayer\": localPlayer});\n\n//\tconstructor.\n\nfunction LocalPlayer(radius){\n\n\tvar player = this; // important!\n\n//  Player Holder.\n\n\tthis.holder = AW3D.PlayerHolder(); // important!\n\tthis.holder.visible = true;\n\tscene.add( this.holder );\n\n//  Player Sphere.\n\n\tthis.sphere = AW3D.PlayerSphere();\n\tthis.sphere.position.y = 12;\n\tthis.holder.add( this.sphere ); \n\n//\tthis.holderHelper = AW3D.PlayerHolderHelper();\n//  scene.add( this.holderHelper );\n\n\n//  Outfit Manager.\n\n\tthis.outfit = new AW3D.OutfitManager(); // important!\n\n\tthis.outfit.update = function() {\n\n\t//  Update avatar rotation y.\n\t\tvar direction = player.controller.direction - Math.PI;\n\n\t//  \"this\" is the \"localPlayer.outfit\".\n\t\tthis.direction.rotation.y = direction;\n\n\t//  Update avatar position.\n\t\tvar x = player.controller.center.x;\n\t\tvar y = player.controller.center.y - player.controller.radius;\n\t\tvar z = player.controller.center.z;\n\n\t//  \"this\" is the \"localPlayer.outfit\".\n\t\tthis.direction.position.set( x, y, z );\n\n\t};\n\n\t\n//  Player Controller.\n\n\tvar radius = parseInt( radius ); // important!\n\tif ( isNaN( radius ) || radius < 1 ) radius = 1;\n\n\tthis.controller = new MW.CharacterController( this.holder, radius );\n\tthis.controller.isWalking = false;\n\n\tthis.controller.getdata = function( action ){\n\n\t\tvar data = {};\n\t\tdata.playerid = socket.id;\n\t\tdata.radius = this.radius;\n\t\tdata.isGrounded = this.isGrounded;\n\t\tdata.isOnSlope = this.isOnSlope;\n\t\tdata.isIdling  = this.isIdling;\n\t\tdata.isJumping = this.isJumping;\n\t\tdata.isRunning = this.isRunning;\n\t\tdata.isWalking = this.isWalking;\n\t\tdata.direction = this.direction;\n\t\tdata.movementSpeed = this.movementSpeed;\n\t\tdata.jumpStartTime = this.jumpStartTime;\n\t\tdata.position = this.center.toArray();\n\t\tif (!!action) data.action = action;\n\n\t\treturn data;\n\t};\n\n\tfunction onStartJumping(){\n\t\tplayer.outfit.AnimationsHandler.weightOff(\"idle\", \"walk\", \"run\");\n\t};\n\n\tfunction onEndJumping(){\n\t\tplayer.outfit.AnimationsHandler.weightOn(\"idle\", \"walk\", \"run\");\n\n\t\tif ( player.controller.isRunning && player.controller.isWalking ) {\n\n\t\t\tplayer.outfit.AnimationsHandler.stop();\n\t\t\tplayer.controller.movementSpeed = 28;\n\t\t\tplayer.outfit.AnimationsHandler.play(\"walk\");\n\t\t\tplayer.controller.dispatchEvent({type:\"startRunning\"});\n\n\t\t} else if ( player.controller.isRunning && !player.controller.isWalking ) {\n\n\t\t\tplayer.outfit.AnimationsHandler.stop();\n\t\t\tplayer.controller.movementSpeed = 45;\n\t\t\tplayer.outfit.AnimationsHandler.play(\"run\");\n\t\t\tplayer.controller.dispatchEvent({type:\"startRunning\"});\n\n\t\t} else {\n\n\t\t\tplayer.outfit.AnimationsHandler.stop();\n\t\t\tplayer.controller.movementSpeed = 0;\n\t\t\tplayer.outfit.AnimationsHandler.play(\"idle\");\n\t\t\tplayer.controller.dispatchEvent({type:\"startIdling\"});\n\n\t\t}\n\t}\n\n\tthis.controller.addEventListener(\"endJumping\",   onEndJumping);\n\tthis.controller.addEventListener(\"startJumping\", onStartJumping);\n\n//  Add controller to world.\n\n\tworld.add( this.controller ); // important!\n\n\tdebugMode && console.log( \n\t\t\"characterPool length:\", world.characterPool.length, \n\t\t\"index:\", world.characterPool.indexOf( this.controller )\n\t);\n\n//  Add outfit direction holder to scene.\n\n\tscene.add( this.outfit.direction ); // important!\n\n};\n\nLocalPlayer.prototype = {\n\n//  Collect position, direction, nickname, and gender.\n\n\tgetdata: function( socket ){\n\n\t\tif ( !socket ) return;\n\t\tvar data = {};\n\t\tdata.playerid  = socket.id;\n\t\tdata.nickname  = this.nickname;\n\t\tdata.gender    = this.outfit.getGender();\n\t\tdata.direction = this.outfit.direction.rotation.y;\n\t\tdata.position  = this.outfit.direction.position.toArray();\n\t\tdata.dna       = this.outfit.toDNA();\n\t\tdebugMode && console.log(\"player data:\", data);\n\n\t\treturn data;\n\n\t},\n\n//  Remote player set data.\n\n\tsetdata: function( data ){\n\n\t\tif ( !data.playerid || data.playerid != this.playerid ) return;\n\n\t\tthis.playerid = data.playerid;\n\t\tthis.nickname = data.nickname;\n\t\tthis.outfit.setGender( data.gender );\n\t\tthis.outfit.direction.rotation.y = data.direction;\n\t\tthis.outfit.direction.position.fromArray(data.position);\n\n\t\tif (data.action != undefined) {\n\t\t\tthis.outfit.AnimationsHandler.stop();\n\t\t\tthis.outfit.AnimationsHandler.play( data.action );\n\t\t}\n\n\t},\n\n//  Create player outfit from dna data.\n\n\tfromDNA: function( dna ){\n\n\t\tvar frontAngle = Math.PI - cameraControls.getFrontAngle(); // face front.\n\t\tthis.controller.direction = frontAngle;\n\t\tthis.outfit.fromDNA( dna );\n\t\tscene.add(this.outfit.direction);\n\t\tthis.outfit.update();\n\n\t},\n\n//  Start remote player action.\n\n\tstartAction: function( running, walking, idling, speed, name, eventType ){\n\n\t\tthis.outfit.AnimationsHandler.stop();        \n\t\tthis.controller.isRunning = running;\n\t\tthis.controller.isWalking = walking;\n\t\tthis.controller.isIdling  = idling;\n\t\tthis.controller.movementSpeed = speed;\n\t\tthis.outfit.AnimationsHandler.play( name );\n\t\tthis.controller.dispatchEvent({type: eventType});\n\n\t},\n\n//  Get local player action data.\n\n\tgetActionData: function ( name ){\n\n\t\treturn {\n\t\t\tplayerid : socket.id,\n\t\t\tdirection: this.outfit.direction.rotation.y,\n\t\t\tposition : this.outfit.direction.position.toArray(),\n\t\t\taction   : name,\n\t\t};\n\n\t},\n\n};\n\n\nfunction update(){\n\n\tlocalPlayer.outfit.update();\n\n}\n"
+			}],
+		"A28758AD-16A0-42EA-ABC0-181DD63E918C": [
+			{
+				"name": "camera-light.js",
+				"source": "scene.remove( this );\n\ncameraLight = new THREE.DirectionalLight( 0xffffff, 0.75 );\n\ncameraLight.intensity = 0.75;\ncameraLight.castShadow = true; // important!\n\n//cameraLight.position.copy( camera.position );\ncameraLight.position.x = camera.position.x;\ncameraLight.position.y = camera.position.y;\ncameraLight.position.z = camera.position.z;\n\ncameraLight.shadow.mapSize.width  = Math.pow(2, 10); // 2048;\ncameraLight.shadow.mapSize.height = Math.pow(2, 10); // 2048;\n\nvar d = 30;\n\ncameraLight.shadow.camera.left = - d;\ncameraLight.shadow.camera.right = d;\ncameraLight.shadow.camera.top = d;\ncameraLight.shadow.camera.bottom = - d;\ncameraLight.shadow.camera.far = 10000;\n\n//\tTARGET.\n\ncameraLight.target = localPlayer.outfit.direction; // important!\n\nscene.add( cameraLight );\n\n//  HELPER.\n\nshadowCameraHelper = new THREE.CameraHelper( cameraLight.shadow.camera );\nshadowCameraHelper.visible = false;\nscene.add( shadowCameraHelper );\n\nfunction update(){\n\n//\tcameraLight.position.x = camera.position.x;\n//\tcameraLight.position.y = camera.position.y;\n//\tcameraLight.position.z = camera.position.z;\n\n\tshadowCameraHelper.update();\n\n}\n"
+			}],
+		"0FF8D94B-FDAD-4BF2-AB9D-6C6CCCE44222": [
+			{
+				"name": "camera-controls.js",
+				"source": "scene.remove( this );\n\ncameraControls = new MW.TPSCameraControl(camera, localPlayer.holder, {\n\tel: renderer.domElement, // html renderer element.\n\toffset: new THREE.Vector3( 0, 12, 0 ), // camera eye height.\n\tradius: 40, // default: 37 // (distance of the character to the camera).\n\tminRadius: 6, // default: 10 // (can take and negative values, yes!!!).\n\tmaxRadius: 100, // default: 64, runtime: 40.\n\trigidObjects: [], // collition objects for the camera.\n});\n\ncameraControls.getforward = function(){ \n\treturn -cameraControls.theta \n};\n\ncameraControls.setVerticalOffset = function(offset){ \n\tcameraControls.offset.y = offset; \n};\n\n(cameraControls.frontAngleUpdate = function(){\n\twindowAnimationFrameRequestID = requestAnimationFrame( cameraControls.frontAngleUpdate );\n\tcameraControls.forward = -cameraControls.theta;\n})();\n\n//\tUPDATE.\n\nfunction update(){\n\n\tcameraControls.update();\n\n}\n"
 			}]
 	},
 	"camera": {
@@ -129,16 +144,16 @@
 			"generator": "Object3D.toJSON"
 		},
 		"object": {
-			"uuid": "08BEA5D0-5A14-401C-812A-BA644FA4CF9E",
+			"uuid": "D0E0043F-83F2-486C-A778-75CE4BF7DFCA",
 			"type": "PerspectiveCamera",
 			"name": "Camera",
-			"matrix": [0.9999975562095642,2.033797426531734e-14,-0.002212866675108671,0,-0.000010703386578825302,0.999988317489624,-0.004836875479668379,0,0.0022128408309072256,0.0048368871212005615,0.9999858736991882,0,0.06544563174247742,0.1430528163909912,29.57497215270996,1],
+			"matrix": [0.6431335806846619,3.6578893247707356e-9,-0.765753984451294,0,-0.3121301531791687,0.9131554365158081,-0.2621486783027649,0,0.6992524266242981,0.40761151909828186,0.5872809290885925,0,33.43955612182617,16.01007843017578,28.580894470214844,1],
 			"fov": 50,
 			"zoom": 1,
 			"near": 0.1,
 			"far": 10000,
 			"focus": 10,
-			"aspect": 1.9586877278250303,
+			"aspect": 1.848623853211009,
 			"filmGauge": 35,
 			"filmOffset": 0
 		}
@@ -207,6 +222,26 @@
 					"type": "Object3D",
 					"name": "Animations",
 					"visible": false,
+					"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
+				},
+				{
+					"uuid": "F864BC9B-8085-4C9D-AAD2-1E14C01D5CAC",
+					"type": "Object3D",
+					"name": "Local Player",
+					"visible": false,
+					"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
+				},
+				{
+					"uuid": "A28758AD-16A0-42EA-ABC0-181DD63E918C",
+					"type": "Object3D",
+					"name": "Camera Light",
+					"visible": false,
+					"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
+				},
+				{
+					"uuid": "0FF8D94B-FDAD-4BF2-AB9D-6C6CCCE44222",
+					"type": "Object3D",
+					"name": "Object3D 2",
 					"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
 				},
 				{
