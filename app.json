@@ -97,7 +97,12 @@
 		"31764852-CAA9-4224-84C3-88A1B7F42B9E": [
 			{
 				"name": "custom-axis-helper.js",
-				"source": "axisCustomHelper = this;\n\nthis.add.apply( this, CustomAxisHelper(5200) );\n\n//  scene.add( axisCustomHelper );\n\nfunction CustomAxisHelper( distance ){\n\n\tvar geometryX = new THREE.Geometry();\n\tvar geometryY = new THREE.Geometry();\n\tvar geometryZ = new THREE.Geometry();\n\n\tvar materialX = new THREE.LineBasicMaterial( {color: 0xff0000} );\n\tvar materialY = new THREE.LineBasicMaterial( {color: 0x00ff00} );\n\tvar materialZ = new THREE.LineBasicMaterial( {color: 0x0000ff} );\n\n\tgeometryX.vertices.push( new THREE.Vector3( -distance, 0, 0 ), new THREE.Vector3( distance, 0, 0 ) );\n\tgeometryY.vertices.push( new THREE.Vector3( 0, -distance, 0 ), new THREE.Vector3( 0, distance, 0 ) );\n\tgeometryZ.vertices.push( new THREE.Vector3( 0, 0, -distance ), new THREE.Vector3( 0, 0, distance ) );\n\n\tvar axisX = new THREE.Line( geometryX, materialX );\n\tvar axisY = new THREE.Line( geometryY, materialY );\n\tvar axisZ = new THREE.Line( geometryZ, materialZ );\n\n\treturn [ axisX, axisZ ];\n\n}\n"
+				"source": "CustomAxisHelper = this;\n\nthis.add.apply( this, helper(5200) );\n\nfunction helper( distance ){\n\n\tvar geometryX = new THREE.Geometry();\n\tvar geometryY = new THREE.Geometry();\n\tvar geometryZ = new THREE.Geometry();\n\n\tvar materialX = new THREE.LineBasicMaterial( {color: 0xff0000} );\n\tvar materialY = new THREE.LineBasicMaterial( {color: 0x00ff00} );\n\tvar materialZ = new THREE.LineBasicMaterial( {color: 0x0000ff} );\n\n\tgeometryX.vertices.push( new THREE.Vector3( -distance, 0, 0 ), new THREE.Vector3( distance, 0, 0 ) );\n\tgeometryY.vertices.push( new THREE.Vector3( 0, -distance, 0 ), new THREE.Vector3( 0, distance, 0 ) );\n\tgeometryZ.vertices.push( new THREE.Vector3( 0, 0, -distance ), new THREE.Vector3( 0, 0, distance ) );\n\n\tvar axisX = new THREE.Line( geometryX, materialX );\n\tvar axisY = new THREE.Line( geometryY, materialY );\n\tvar axisZ = new THREE.Line( geometryZ, materialZ );\n\n\treturn [ axisX, axisZ ];\n\n}\n"
+			}],
+		"C2D1E4A6-A3EC-4085-882F-D5745F051758": [
+			{
+				"name": "custom-origin-helper.js",
+				"source": "CustonOriginHelper = this;\n\nvar loader = new THREE.FontLoader();\nvar url = \"/three/fonts/helvetiker_regular.typeface.json\";\n\nloader.load( url, function( font ) {\n\n\tvar distance = 1200;\n\n//  Font Material\n\tvar face_mtl = new THREE.MeshBasicMaterial( { color: 0xffffff } );\n\tvar side_mtl = new THREE.MeshBasicMaterial( { color: 0x888888 } );\n\tvar material = new THREE.MeshFaceMaterial([ face_mtl, side_mtl ]);\n\n//  Text Styles.\n\tvar h0 = { size: 40, height: 2,   curveSegments: 10, font: font, weight: \"normal\", style: \"normal\", bevelThickness: 1, bevelSize: 2, bevelEnabled: false, material: 0, extrudeMaterial: 1 }\n\tvar h1 = { size: 20, height: 1,   curveSegments: 10, font: font, weight: \"normal\", style: \"normal\", bevelThickness: 1, bevelSize: 2, bevelEnabled: false, material: 0, extrudeMaterial: 1 }\n\tvar h2 = { size: 10, height: 1,   curveSegments: 10, font: font, weight: \"normal\", style: \"normal\", bevelThickness: 1, bevelSize: 2, bevelEnabled: false, material: 0, extrudeMaterial: 1 }\n\tvar h3 = { size: 5,  height: 0.5, curveSegments: 10, font: font, weight: \"normal\", style: \"normal\", bevelThickness: 1, bevelSize: 2, bevelEnabled: false, material: 0, extrudeMaterial: 1 }\n\n//  Origins Group.\n\tCustonOriginHelper.add( new Text3D( \"+x\", h1, [2, 2, 5], [ distance, 20, 0], [0, -Math.PI * 0.5, 0]) );\n\tCustonOriginHelper.add( new Text3D( \"-x\", h1, [2, 2, 5], [-distance, 20, 0], [0,  Math.PI * 0.5, 0]) ); \n\tCustonOriginHelper.add( new Text3D( \"+z\", h1, [2, 2, 5], [0, 20,  distance], [0, -Math.PI,       0]) ); \n\tCustonOriginHelper.add( new Text3D( \"-z\", h1, [2, 2, 5], [0, 20, -distance], [0,              0, 0]) ); \n\tCustonOriginHelper.add( new Text3D( \"+y\", h1, [2, 2, 5], [0,   distance, 0], [ Math.PI * 0.5, 0, 0]) ); \n\tCustonOriginHelper.add( new Text3D( \"-y\", h1, [2, 2, 5], [0,  -distance, 0], [-Math.PI * 0.5, 0, 0]) ); \n\n//\tscene.add( CustonOriginHelper );\n\n\tfunction Text3D(text, style, scale, position, rotation){\n\t\tvar geometry = new THREE.TextGeometry( text, style );\n\t\tvar mesh = new THREE.Mesh(geometry, material );\n\t\tgeometry.computeBoundingBox();\n\t\tvar width = geometry.boundingBox.max.x - geometry.boundingBox.min.x;\n\t\tmesh.geometry.center();\n\t\tmesh.scale.fromArray( scale ); \n\t\tmesh.rotation.fromArray( rotation );\n\t\tmesh.position.fromArray( position );\n\t\treturn mesh;\n\t}\n\n});\n"
 			}]
 	},
 	"camera": {
@@ -107,10 +112,10 @@
 			"generator": "Object3D.toJSON"
 		},
 		"object": {
-			"uuid": "746CAE94-4A3C-47F8-A2FE-9F682185D755",
+			"uuid": "08BEA5D0-5A14-401C-812A-BA644FA4CF9E",
 			"type": "PerspectiveCamera",
 			"name": "Camera",
-			"matrix": [-0.7392734885215759,-2.4726571901112493e-9,0.6734053492546082,0,0.14684981107711792,0.9759330153465271,0.1612137109041214,0,-0.6571984887123108,0.21807046234607697,-0.7214813828468323,0,-19.71595573425293,6.542113780975342,-21.644441604614258,1],
+			"matrix": [-0.7392734885215759,-2.6492756877161128e-9,0.6734053492546082,0,0.14684981107711792,0.9759330153465271,0.1612137109041214,0,-0.6571984887123108,0.21807046234607697,-0.7214813828468323,0,-19.43690299987793,6.44951868057251,-21.338092803955078,1],
 			"fov": 50,
 			"zoom": 1,
 			"near": 0.1,
@@ -172,6 +177,12 @@
 					"uuid": "31764852-CAA9-4224-84C3-88A1B7F42B9E",
 					"type": "Group",
 					"name": "Custom Axis Helper",
+					"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
+				},
+				{
+					"uuid": "C2D1E4A6-A3EC-4085-882F-D5745F051758",
+					"type": "Group",
+					"name": "Custon Origin Helper",
 					"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
 				},
 				{
