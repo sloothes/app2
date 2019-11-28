@@ -123,7 +123,7 @@ var APP = {
 
 			}
 
-			debugMode && console.log( "events:", events );
+		//	debugMode && console.log( "events:", events );
 /*
 		//  Initialize scene object scripts first.
 
