@@ -31,34 +31,7 @@ var APP = {
 			THREE.Cache.enabled = json.project.cache; // important!
 			console.log({ "vr": vr, "debugMode": debugMode, "cache": THREE.Cache.enabled });
 
-	/*
-		//	Load external javascirpt libraries.
-
-			if ( json.jslibraries && json.jslibraries.length > 0 ) {
-
-				var scripts = json.jslibraries.map( parseScript );
-				debugMode && console.log( "scripts:", scripts );
-
-				function parseScript( item ){ 
-					return {
-						name: item.name,
-						source: JSON.parse( item.source ) // important!
-					};
-				}
-
-				while ( scripts.length ) {
-
-					var object = scripts.shift(); // important!
-					var script = new Function( object.source );
-					script.bind( window ).call(); // bind and execute.
-					console.log("Library", object.name, "loaded.");
-
-				}
-
-			}
-	*/
-
-		//	Renderer.
+		//	Renderer (is global for debug only).
 
 			renderer = new THREE.WebGLRenderer({ 
 				antialias: true,
@@ -78,8 +51,6 @@ var APP = {
 			this.dom.appendChild( renderer.domElement );
 			this.setScene( loader.parse( json.scene ) );
 			this.setCamera( loader.parse( json.camera ) );
-
-		//  If editor controls always after setCamera(); important!
 
 			events = {
 				init: [],
@@ -112,17 +83,25 @@ var APP = {
 
 			for ( var uuid in json.scripts ) {
 
-				var scripts = json.scripts[ uuid ]; 
-
 				var object = scene.getObjectByProperty( "uuid", uuid, true ); // important!
+
+				if ( object === undefined ) {
+
+					console.warn( "Scripts of uuid:", uuid, "are orphan. \"this\" of \"functions\" will become the \"window\"." ); // continue;
+
+				}
+
+				var scripts = json.scripts[ uuid ]; 
 
 				for ( var i = 0; i < scripts.length; i ++ ) {
 
 					var script = scripts[ i ];
 
-				//	if "object" is "null" then functions "this" become the "window".
+				//	if "object" is "null", "this" of functions will become the "window".
 
 					var functions = ( new Function( scriptWrapParams, script.source + "\nreturn " + scriptWrapResult + ";" ).bind( object ) )( this, renderer, scene, camera );
+					
+					debugMode && console.log( "functions:", functions );
 
 					for ( var name in functions ) {
 
