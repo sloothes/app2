@@ -158,7 +158,7 @@
 		"E2927F89-0C55-4178-9541-8792DE54DF82": [
 			{
 				"name": "",
-				"source": "console.log( this.children );"
+				"source": "scene.remove( this );\n\nconsole.log( json );"
 			}]
 	},
 	"camera": {
@@ -177,7 +177,7 @@
 			"near": 0.1,
 			"far": 10000,
 			"focus": 10,
-			"aspect": 1.848623853211009,
+			"aspect": 0.9331713244228432,
 			"filmGauge": 35,
 			"filmOffset": 0
 		}
