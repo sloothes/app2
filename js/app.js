@@ -1,6 +1,6 @@
 var debugMode;
 var camera, scene, renderer;
-var vr, controls, effect, center;
+var vr, controls, effect;
 
 var APP = {
 
@@ -13,7 +13,7 @@ var APP = {
 	//	var vr, controls, effect;
 	//	var camera, scene, renderer;
 
-		var events = {};
+		var events = {}; // important!
 
 		this.dom = document.createElement( "div" );
 
@@ -108,7 +108,44 @@ var APP = {
 
 			var scriptWrapResult = JSON.stringify( scriptWrapResultObj ).replace( /\"/g, "" );
 
+		//
 
+			for ( var uuid in json.scripts ) {
+
+				var scripts = json.scripts[ uuid ]; 
+
+				var object = scene.getObjectByProperty( "uuid", uuid, true ); // important!
+
+				for ( var i = 0; i < scripts.length; i ++ ) {
+
+					var script = scripts[ i ];
+
+				//	if "object" is "null" then functions "this" become the "window".
+
+					var functions = ( new Function( scriptWrapParams, script.source + "\nreturn " + scriptWrapResult + ";" ).bind( object ) )( this, renderer, scene, camera );
+
+					for ( var name in functions ) {
+
+						if ( functions[ name ] === undefined ) continue;
+
+						if ( events[ name ] === undefined ) {
+
+							console.warn( "APP.Player: Event type not supported (", name, ")" ); 
+
+							continue;
+
+						}
+
+						events[ name ].push( functions[ name ].bind( object ) );
+
+					}
+
+				}
+
+			}
+
+			debugMode && console.log( "events:", events );
+/*
 		//  Initialize scene object scripts first.
 
 			var uuid = json.scene.object.uuid; // important!
@@ -184,7 +221,7 @@ var APP = {
 				}
 
 			}
-
+*/
 			dispatch( events.init, arguments );
 
 		};
