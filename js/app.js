@@ -101,7 +101,7 @@ var APP = {
 
 					var functions = ( new Function( scriptWrapParams, script.source + "\nreturn " + scriptWrapResult + ";" ).bind( object ) )( this, renderer, scene, camera );
 					
-					debugMode && console.log( "functions:", functions );
+				//	debugMode && console.log( "functions:", functions );
 
 					for ( var name in functions ) {
 
@@ -123,7 +123,7 @@ var APP = {
 
 			}
 
-		//	debugMode && console.log( "events:", events );
+			debugMode && console.log( "events:", events );
 /*
 		//  Initialize scene object scripts first.
 
