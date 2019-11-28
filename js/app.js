@@ -87,7 +87,7 @@ var APP = {
 
 				if ( object === undefined ) {
 
-					console.warn( "Scripts of uuid:", uuid, "are orphan. \"this\" of \"functions\" will become the \"window\"." ); // continue;
+					console.warn( "Scripts of uuid:", uuid, "are orphan. Orphan scripts get \"window\" as \"this\"." ); // continue;
 
 				}
 
