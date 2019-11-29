@@ -308,7 +308,7 @@
 		"44DF6426-161A-486B-957D-8B9CC977AC57": [
 			{
 				"name": "startup-avatar.js",
-				"source": "//\tturnBack.js\n\nsetTimeout( function(){\n\n\tvar frontAngle = Math.PI - cameraControls.getFrontAngle();\n\tvar deltaAngle = getDeltaAngle( localPlayer.controller.direction, frontAngle );\n\n\tlocalPlayer.controller.direction += deltaAngle;\n\tlocalPlayer.outfit.update();\n\n\n\tfunction mod( a, n ) { return ( a % n + n ) % n;  } // important!\n\tfunction getDeltaAngle( current, target ) {\n\t\tvar a = mod( ( current - target ), 2 * Math.PI );\n\t\tvar b = mod( ( target - current ), 2 * Math.PI );\n\t\treturn a < b ? -a : b;\n\t}\n\n});\n\nsetTimeout( function() {\n\n\tif ( config && config.getKey && config.getKey( \"app/avatar\" ) ) {\n\n\t//\tRestore from config.\n\n\t\tvar json = config.getKey( \"app/avatar\" );\n\t\tdebugMode && console.log( \"app/avatar:\", json );\n\n\t\tlocalPlayer.outfit.fromJSON( json ).then(function( outfit ){\n\t\t//\tTODO: Update outfit slots.\n\t\t\tdebugMode && console.log( \"outfit:\", outfit );\n\t\t});\n\n\t} else {\n\n\t//\tInitial avatar outfit.\n\n\t/*\n\t\tbody.female.index = 1;\n\t\teyes.female.index = 1;\n\t\thairs.female.index = 1;\n\t\tstockings.female.index = 1;\n\t\tunderwears.female.index = 1;\n\t\tshoes.female.index = 1;\n\t*/\n\n\t//\tSet gender first.\n\n\t\tvar gender = \"female\";\n\t\tlocalPlayer.outfit.setGender( gender );\n\n\t//\tAdd outfit slots.\n\n\t\tvar slots = [ \n\t\t\tbody, \n\t\t\teyes, \n\t\t\thairs, \n\t\t\tstockings, \n\t\t\tunderwears, \n\t\t\tcostume,\n\t\t\ttshirt, \n\t\t\ttrousers, \n\t\t\tshoes\n\t\t];\n\n\t\twhile ( slots.length ) {\n\n\t\t\tvar slot = slots.shift();\n\n\t\t\tslot[ gender ] && slot[ gender ].getObject && localPlayer.outfit.add( slot[ gender ].getObject() ); \n\n\t\t}\n\n\t}\n\n});\n\n"
+				"source": "//\tturnBack.js\n\nsetTimeout( function(){\n\n\tvar frontAngle = Math.PI - cameraControls.getFrontAngle();\n\tvar deltaAngle = getDeltaAngle( localPlayer.controller.direction, frontAngle );\n\n\tlocalPlayer.controller.direction += deltaAngle;\n\tlocalPlayer.outfit.update();\n\n\n\tfunction mod( a, n ) { return ( a % n + n ) % n;  } // important!\n\tfunction getDeltaAngle( current, target ) {\n\t\tvar a = mod( ( current - target ), 2 * Math.PI );\n\t\tvar b = mod( ( target - current ), 2 * Math.PI );\n\t\treturn a < b ? -a : b;\n\t}\n\n});\n\nsetTimeout( function() {\n\n\tif ( config && config.getKey && config.getKey( \"app/avatar\" ) ) {\n\n\t//\tRestore from config.\n\n\t\tvar json = config.getKey( \"app/avatar\" );\n\t\tdebugMode && console.log( \"app/avatar:\", json );\n\n\t\tlocalPlayer.outfit.fromJSON( json ).then(function( outfit ){\n\t\t//\tTODO: Update outfit slots.\n\t\t\tdebugMode && console.log( \"outfit:\", outfit );\n\t\t});\n\n\t} else {\n\n\t//\tInitial avatar outfit.\n\n\t/*\n\t\tbody.female.index = 1;\n\t\teyes.female.index = 1;\n\t\thairs.female.index = 1;\n\t\tstockings.female.index = 1;\n\t\tunderwears.female.index = 1;\n\t\tshoes.female.index = 1;\n\t*/\n\n\t//\tSet gender first.\n\n\t\tvar gender = \"female\";\n\t\tlocalPlayer.outfit.setGender( gender );\n\n\t//\tAdd outfit slots.\n\n\t\tvar slots = [ body, eyes, hairs, stockings, underwears, costume,tshirt, trousers, shoes ];\n\n\t\twhile ( slots.length ) {\n\n\t\t\tvar slot = slots.shift();\n\n\t\t\tslot[ gender ] && slot[ gender ].getObject && localPlayer.outfit.add( slot[ gender ].getObject() ); \n\n\t\t}\n\n\t}\n\n});\n\n"
 			}]
 	},
 	"camera": {
@@ -327,7 +327,7 @@
 			"near": 0.1,
 			"far": 10000,
 			"focus": 10,
-			"aspect": 1.9586877278250303,
+			"aspect": 1.9213349225268177,
 			"filmGauge": 35,
 			"filmOffset": 0
 		}
@@ -595,6 +595,20 @@
 						}]
 				},
 				{
+					"uuid": "FFAEC6F7-229B-4161-B476-BA2283511B51",
+					"type": "Group",
+					"name": "(startup)",
+					"visible": false,
+					"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
+					"children": [
+						{
+							"uuid": "44DF6426-161A-486B-957D-8B9CC977AC57",
+							"type": "Object3D",
+							"name": "Avatar (startup)",
+							"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
+						}]
+				},
+				{
 					"uuid": "A7B42912-C970-47B8-A12A-2904617E6231",
 					"type": "Group",
 					"name": "(side panel)",
@@ -620,20 +634,6 @@
 							"type": "Object3D",
 							"name": "Textures Tab",
 							"visible": false,
-							"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
-						}]
-				},
-				{
-					"uuid": "FFAEC6F7-229B-4161-B476-BA2283511B51",
-					"type": "Group",
-					"name": "(startup)",
-					"visible": false,
-					"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
-					"children": [
-						{
-							"uuid": "44DF6426-161A-486B-957D-8B9CC977AC57",
-							"type": "Object3D",
-							"name": "Avatar (startup)",
 							"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
 						}]
 				}]
