@@ -131,7 +131,8 @@
 			var loader = new THREE.XHRLoader( manager );
 			loader.load( "test/encoded-demo-app.txt", function ( text ) {
 
-				var json = JSON.parse( decode( text ) );
+				var data = decode( text );
+				var json = JSON.parse( data );
 				debugMode && console.log( "json:", json );
 
 			//	Load external javascirpt libraries.
