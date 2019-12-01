@@ -254,6 +254,16 @@
 
 			}
 
+		//	Encode - Decode.
+
+			function encode( string ) {
+				return window.btoa( RawDeflate.deflate( string ) );
+			}
+
+			function decode( string ) {
+				return RawDeflate.inflate( window.atob( string ) );
+			}
+
 		</script>
 
 	</body>
