@@ -129,15 +129,9 @@
 		//	Loader.
 
 			var loader = new THREE.XHRLoader( manager );
-			loader.load( "test/encoded-demo-app.txt", function ( string ) {
-				debugMode && console.log( "string:", string );
+			loader.load( "test/encoded-demo-app.txt", function ( text ) {
 
-				var raw = window.atob( string );
-				debugMode && console.log( "raw:", raw );
-				var data = RawDeflate.inflate( raw );
-				debugMode && console.log( "data:", data );
-				var json = JSON.parse( data );
-				debugMode && console.log( "json:", json );
+				var json = JSON.parse( decode( text ) );
 
 			//	Load external javascirpt libraries.
 
