@@ -130,6 +130,7 @@
 
 			var loader = new THREE.XHRLoader( manager );
 			loader.load( "test/encoded-demo-app.txt", function ( string ) {
+				debugMode && console.log( "string:", string );
 
 				var raw = window.atob( string );
 				debugMode && console.log( "raw:", raw );
