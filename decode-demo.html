@@ -132,6 +132,7 @@
 			loader.load( "test/encoded-demo-app.txt", function ( text ) {
 
 				var data = decode( text );
+				debugMode && console.log( "data:", data );
 				var json = JSON.parse( data );
 				debugMode && console.log( "json:", json );
 
