@@ -20,6 +20,8 @@ var APP = {
 		this.width = 500;
 		this.height = 500;
 
+		this.signals = {};
+
 	//	Load app.json.
 
 		this.load = function ( json ) {
@@ -67,7 +69,7 @@ var APP = {
 				update: [],
 			};
 
-			var scriptWrapParams = "player,renderer,scene,camera,controls";
+			var scriptWrapParams = "app,renderer,scene,camera,controls";
 			var scriptWrapResultObj = {};
 
 			for ( var eventKey in events ) {
@@ -109,7 +111,7 @@ var APP = {
 
 						if ( events[ name ] === undefined ) {
 
-							console.warn( "APP.Player: Event type not supported (", name, ")" ); 
+							console.warn( "APP: Event type not supported (", name, ")" ); 
 
 							continue;
 
@@ -145,7 +147,7 @@ var APP = {
 
 						if ( events[ name ] === undefined ) {
 
-							console.warn( "APP.Player: Event type not supported (", name, ")" ); 
+							console.warn( "APP: Event type not supported (", name, ")" ); 
 
 							continue;
 
@@ -185,7 +187,7 @@ var APP = {
 
 							if ( events[ name ] === undefined ) {
 
-								console.warn( "APP.Player: Event type not supported (", name, ")" ); 
+								console.warn( "APP: Event type not supported (", name, ")" ); 
 
 								continue;
 

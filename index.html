@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 
-		<title>app (v2.0)</title>
+		<title>app (v2.1)</title>
 
 		<link rel="stylesheet" href="/css/bootstrap.min.css">
 		<link rel="stylesheet" href="/css/bootbox-dialoges.css">
@@ -161,13 +161,13 @@
 
 			//
 
-				var player = new APP.Player(); // (global for debug!) // TODO: var app = new APP.Player();
+				app = new APP.Player(); // (global for debug!) // TODO: var app = new APP.Player();
 
-				player.load( json );
-				player.setSize( window.innerWidth, window.innerHeight );
-				player.play();
+				app.load( json );
+				app.setSize( window.innerWidth, window.innerHeight );
+				app.play();
 
-				document.body.appendChild( player.dom );
+				document.body.appendChild( app.dom );
 
 				if ( json.project.editable === true ) {
 
@@ -188,7 +188,7 @@
 		//		Resize.
 
 				window.addEventListener( "resize", function () {
-					player.setSize( window.innerWidth, window.innerHeight );
+					app.setSize( window.innerWidth, window.innerHeight );
 				});
 
 				
